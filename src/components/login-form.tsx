@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { signIn } from '@/lib/actions';
 import {
   Form,
@@ -33,7 +33,10 @@ const LoginSchema = z.object({
 });
 
 export default function LoginForm() {
-  const [state, formAction] = useFormState(signIn, undefined);
+  const [state, formAction] = useActionState(signIn, {
+    error: null,
+    success: false,
+  });
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -59,6 +62,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="password"
@@ -72,6 +76,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="role"
@@ -98,10 +103,10 @@ export default function LoginForm() {
         />
 
         {state?.error && (
-            <Alert variant="destructive" className="bg-white border-black text-black">
-                <Terminal className="h-4 w-4" color="black" />
-                <AlertDescription>{state.error}</AlertDescription>
-            </Alert>
+          <Alert variant="destructive" className="bg-white border-black text-black">
+            <Terminal className="h-4 w-4" color="black" />
+            <AlertDescription>{state.error}</AlertDescription>
+          </Alert>
         )}
 
         <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">

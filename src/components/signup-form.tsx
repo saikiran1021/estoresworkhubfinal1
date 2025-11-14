@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { signUp } from '@/lib/actions';
 import {
   Form,
@@ -48,7 +48,11 @@ const SignupSchema = z
 type EmailVerificationStatus = 'idle' | 'checking' | 'valid' | 'invalid';
 
 export default function SignupForm() {
-  const [state, formAction] = useFormState(signUp, undefined);
+  const [state, formAction] = useActionState(signUp, {
+    error: null, // REQUIRED initial state
+    success: false,
+  });
+
   const { toast } = useToast();
   const [emailStatus, setEmailStatus] = useState<EmailVerificationStatus>('idle');
 
@@ -64,29 +68,31 @@ export default function SignupForm() {
     },
   });
 
-  const handleEmailBlur = useCallback(async (email: string) => {
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setEmailStatus('idle');
-      return;
-    }
-    setEmailStatus('checking');
-    try {
-      const result = await verifyUserEmail({ email });
-      if (result.isValid) {
-        setEmailStatus('valid');
-      } else {
-        setEmailStatus('invalid');
-        toast({
-          title: "Email may be invalid",
-          description: result.reason,
-          variant: 'default',
-        });
+  const handleEmailBlur = useCallback(
+    async (email: string) => {
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setEmailStatus('idle');
+        return;
       }
-    } catch (error) {
-      setEmailStatus('idle');
-      console.error("Email verification failed:", error);
-    }
-  }, [toast]);
+
+      setEmailStatus('checking');
+      try {
+        const result = await verifyUserEmail({ email });
+        if (result.isValid) {
+          setEmailStatus('valid');
+        } else {
+          setEmailStatus('invalid');
+          toast({
+            title: 'Email may be invalid',
+            description: result.reason,
+          });
+        }
+      } catch {
+        setEmailStatus('idle');
+      }
+    },
+    [toast]
+  );
 
   return (
     <Form {...form}>
@@ -105,6 +111,7 @@ export default function SignupForm() {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="surname"
@@ -119,6 +126,7 @@ export default function SignupForm() {
             )}
           />
         </div>
+
         <FormField
           control={form.control}
           name="phone"
@@ -132,6 +140,7 @@ export default function SignupForm() {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="email"
@@ -140,19 +149,27 @@ export default function SignupForm() {
               <FormLabel>Email</FormLabel>
               <div className="relative">
                 <FormControl>
-                  <Input type="email" placeholder="name@example.com" {...field} onBlur={() => handleEmailBlur(field.value)} />
+                  <Input
+                    type="email"
+                    placeholder="name@example.com"
+                    {...field}
+                    onBlur={() => handleEmailBlur(field.value)}
+                  />
                 </FormControl>
+
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {emailStatus === 'checking' && <Loader2 className="h-4 w-4 animate-spin" />}
                   {emailStatus === 'valid' && <CheckCircle className="h-4 w-4 text-green-500" />}
                   {emailStatus === 'invalid' && <XCircle className="h-4 w-4 text-red-500" />}
                 </div>
               </div>
+
               <FormDescription>We use AI to verify email addresses.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="password"
@@ -166,6 +183,7 @@ export default function SignupForm() {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="confirmPassword"
@@ -179,6 +197,7 @@ export default function SignupForm() {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="role"
@@ -203,12 +222,12 @@ export default function SignupForm() {
             </FormItem>
           )}
         />
-        
-        {state?.error && (
-            <Alert variant="destructive" className="bg-white border-black text-black">
-                <Terminal className="h-4 w-4" color="black" />
-                <AlertDescription>{state.error}</AlertDescription>
-            </Alert>
+
+        {state.error && (
+          <Alert variant="destructive" className="bg-white border-black text-black">
+            <Terminal className="h-4 w-4" color="black" />
+            <AlertDescription>{state.error}</AlertDescription>
+          </Alert>
         )}
 
         <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
