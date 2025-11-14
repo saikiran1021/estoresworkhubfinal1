@@ -1,3 +1,10 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "estores-logo",
+      "description": "eStores WorkHub company logo",
+      "imageUrl": "https://estoresedu.com/estores_logo-transformed.png",
+      "imageHint": "logo"
+    }
+  ]
 }
