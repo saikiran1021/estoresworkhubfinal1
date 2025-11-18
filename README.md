@@ -24,35 +24,49 @@ Welcome to the eStores WorkHub, a modern, role-based employee and partner manage
 
 Follow these steps to get the development environment running on your local machine.
 
-### Prerequisites
+### 1. Prerequisites
 
-*   [Node.js](https://nodejs.org/) (v18 or later recommended)
-*   [npm](https://www.npmjs.com/) or another package manager like [yarn](https://yarnpkg.com/) or [pnpm](https://pnpm.io/)
+Before you begin, ensure you have the following installed on your system:
 
-### Installation
+*   **Node.js:** Version 18 or later is recommended. You can download it from [nodejs.org](https://nodejs.org/).
+*   **Package Manager:** This project uses `npm`, which comes bundled with Node.js. You can also use `yarn` or `pnpm` if you prefer.
 
-1.  Clone the repository:
-    ```bash
-    git clone <your-repository-url>
-    ```
-2.  Navigate to the project directory:
-    ```bash
-    cd <project-directory>
-    ```
-3.  Install the dependencies:
-    ```bash
-    npm install
-    ```
+### 2. Clone the Repository
 
-### Running the Development Server
+First, clone the project repository to your local machine using Git:
 
-To start the development server, run the following command:
+```bash
+git clone <your-repository-url>
+cd <project-directory>
+```
+
+### 3. Install Dependencies
+
+Next, install all the necessary project dependencies using your package manager. This command reads the `package.json` file and downloads all the required libraries.
+
+```bash
+npm install
+```
+
+### 4. Running the Development Server
+
+Once the dependencies are installed, you can start the local development server. This will launch the application and the Genkit AI flows simultaneously.
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:9002](http://localhost:9002) with your browser to see the result.
+The application will be available at [http://localhost:9002](http://localhost:9002). The site will automatically reload if you make any changes to the code.
+
+## 📜 Available Scripts
+
+This project comes with several pre-configured npm scripts to help with development:
+
+*   `npm run dev`: Starts the Next.js development server and the Genkit development server concurrently. This is the primary command for local development.
+*   `npm run build`: Compiles the application for production.
+*   `npm run start`: Starts the production server after a build.
+*   `npm run lint`: Lints the codebase to check for errors and style issues.
+*   `npm run typecheck`: Runs the TypeScript compiler to check for type errors.
 
 ## 📂 Project Structure
 
